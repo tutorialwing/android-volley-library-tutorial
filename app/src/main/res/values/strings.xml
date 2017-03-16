@@ -1,0 +1,15 @@
+<resources>
+	<string name="app_name">VolleyLibraryTutorial</string>
+	<string name="string_request">String Request</string>
+	<string name="json_object_request">Json Object Request</string>
+	<string name="json_array_request">Json Array Request</string>
+	<string name="image_request">Image Request</string>
+	<string name="click_button_example">Click on the button below to see respective example...</string>
+	<string name="get_request">GET REQUEST</string>
+	<string name="load_image_into_imageview">Load image into ImageView</string>
+	<string name="imageview">imageView</string>
+	<string name="load_image_with_placehodler_error_into_imageview">Load image with Placehodler and Error into ImageView</string>
+	<string name="load_image_into_networkimageview">Load image into NetworkImageView</string>
+	<string name="fetch_data">FETCH DATA</string>
+	<string name="post_request">POST REQUEST</string>
+</resources>
