@@ -5,7 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,7 +24,7 @@ public class JsonObjectRequestActivity extends AppCompatActivity implements View
 
 	public static final String REQUEST_TAG = "JSON_OBJECT_REQUEST_TAG";
 	public static final String POST_REQUEST_TAG = "JSON_OBJECT_POST_REQUEST_TAG";
-	public static final String JSON_URL = "http://tutorialwing.com/api/tutorialwing_details.json";
+	public static final String JSON_URL = "https://tutorialwing.com/api/tutorialwing_details.json";
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +55,10 @@ public class JsonObjectRequestActivity extends AppCompatActivity implements View
 					}
 				});
 
+		jsonObjectReq.setRetryPolicy(new DefaultRetryPolicy(15000,
+				DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
 		// Adding JsonObject request to request queue
 		AppController.getInstance().addToRequestQueue(jsonObjectReq, REQUEST_TAG);
 	}
@@ -74,7 +81,7 @@ public class JsonObjectRequestActivity extends AppCompatActivity implements View
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-//						VolleyLog.d(TAG, "Error: " + error.getMessage());
+						Toast.makeText(JsonObjectRequestActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
 					}
 				}) {
 
@@ -86,6 +93,46 @@ public class JsonObjectRequestActivity extends AppCompatActivity implements View
 				params.put("email", "tutorialwing@gmail.com");
 				params.put("password", "1234567");
 				return params;
+			}
+		};
+
+		// Increase Timeout to 15 secs.
+		jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(15000,
+				DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+		AppController.getInstance().addToRequestQueue(jsonObjReq, POST_REQUEST_TAG);
+	}
+
+	private void sendPostRequestWithHeaders() {
+
+		// Change the url of the post request as per your need...This url is just for demo purposes and
+		// actually it does not post data...i.e. it will return same response irrespective of the value you
+		// as parameters.
+
+		JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, JSON_URL,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						showResponse(response, "Showing POST request response...");
+					}
+				},
+				new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+//						VolleyLog.d(TAG, "Error: " + error.getMessage());
+					}
+				}) {
+
+			// You can send parameters as header with POST request....
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Content-Type", "application/json");
+				headers.put("apiKey", "xxxxxxxxxxxxxxx");
+				return headers;
 			}
 		};
 
@@ -119,5 +166,11 @@ public class JsonObjectRequestActivity extends AppCompatActivity implements View
 				sendPostRequest();
 				break;
 		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		AppController.getInstance().getRequestQueue().cancelAll(REQUEST_TAG);
 	}
 }

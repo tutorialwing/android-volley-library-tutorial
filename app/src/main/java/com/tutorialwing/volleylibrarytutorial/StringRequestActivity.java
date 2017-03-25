@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -14,7 +15,7 @@ import com.android.volley.toolbox.StringRequest;
 public class StringRequestActivity extends AppCompatActivity {
 
 	public static final String REQUEST_TAG = "STRING_REQUEST_TAG";
-	public static final String JSON_URL = "http://tutorialwing.com/api/tutorialwing_welcome.json";
+	public static final String JSON_URL = "https://tutorialwing.com/api/tutorialwing_welcome.json";
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +48,11 @@ public class StringRequestActivity extends AppCompatActivity {
 					}
 				});
 
+		// Increase Timeout to 15 secs.
+		stringRequest.setRetryPolicy(new DefaultRetryPolicy(15000,
+				DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
 		AppController.getInstance().addToRequestQueue(stringRequest, REQUEST_TAG);
 	}
 
@@ -56,5 +62,4 @@ public class StringRequestActivity extends AppCompatActivity {
 			txvResponse.setText(response);
 		}
 	}
-
 }

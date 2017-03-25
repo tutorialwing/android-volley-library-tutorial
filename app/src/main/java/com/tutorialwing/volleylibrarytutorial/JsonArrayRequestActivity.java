@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -17,7 +19,7 @@ import org.json.JSONArray;
 public class JsonArrayRequestActivity extends AppCompatActivity implements View.OnClickListener {
 
 	public static final String REQUEST_TAG = "JSON_ARRAY_REQUEST_TAG";
-	public static final String JSON_URL = "http://tutorialwing.com/api/tutorialwing_posts.json";
+	public static final String JSON_URL = "https://tutorialwing.com/api/tutorialwing_posts.json";
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,8 +43,14 @@ public class JsonArrayRequestActivity extends AppCompatActivity implements View.
 				new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						Toast.makeText(JsonArrayRequestActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
 					}
 				});
+
+		// Increase Timeout to 15 secs.
+		jsonArrayReq.setRetryPolicy(new DefaultRetryPolicy(15000,
+				DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
 		// Adding JsonObject request to request queue
 		AppController.getInstance().addToRequestQueue(jsonArrayReq, REQUEST_TAG);
@@ -64,5 +72,11 @@ public class JsonArrayRequestActivity extends AppCompatActivity implements View.
 				sendRequest();
 				break;
 		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		AppController.getInstance().getRequestQueue().cancelAll(REQUEST_TAG);
 	}
 }

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -12,7 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
 
-	public static final String IMAGE_URL = "http://tutorialwing.com/api/tutorialwing_logo.jpg";
+	public static final String IMAGE_URL = "https://tutorialwing.com/api/tutorialwing_logo.jpg";
 
 	private ImageView imageView;
 	private ImageView imageViewWithPlaceholderAndError;
@@ -51,7 +52,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-
+				Toast.makeText(ImageActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		});
 	}

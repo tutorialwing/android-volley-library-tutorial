@@ -1,5 +1,7 @@
 package com.tutorialwing.volleylibrarytutorial.models;
 
+import com.tutorialwing.volleylibrarytutorial.Constants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,21 +12,16 @@ public class Post {
 	private String category;
 	private String url;
 
-	private String KEY_NAME = "name";
-	private String KEY_TITLE = "title";
-	private String KEY_CATEGORY = "category";
-	private String KEY_URL = "url";
-
 	public Post(JSONObject jsonObject) {
 		parseJson(jsonObject);
 	}
 
 	private void parseJson(JSONObject jsonObject) {
 		try {
-			name = jsonObject.getString(KEY_NAME);
-			title = jsonObject.getString(KEY_TITLE);
-			category = jsonObject.getString(KEY_CATEGORY);
-			url = jsonObject.getString(KEY_URL);
+			name = jsonObject.getString(Constants.KEY_NAME);
+			title = jsonObject.getString(Constants.KEY_TITLE);
+			category = jsonObject.getString(Constants.KEY_CATEGORY);
+			url = jsonObject.getString(Constants.KEY_URL);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
